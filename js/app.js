@@ -1,7 +1,7 @@
 /*
  * Create a list that holds all of your cards
  */
-
+const array = 
 
 /*
  * Display the cards on the page
@@ -36,3 +36,20 @@ function shuffle(array) {
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
+const allCards = document.querySelectorAll('.card');
+
+allCards.forEach(function(card) {
+	card.addEventListener('click', function (e) {
+		card.classList.add('open', 'show');
+	})
+});
+
+/*const restart = document.querySelectorAll('.restart');
+
+restart.forEach(function(restartGame) {
+	restartGame.addEventListener('click', function(e) {
+		const allCards = document.querySelectorAll('.card');
+		allCards.classList.remove('open', 'show');
+		console.log('restart');
+	})
+});*/
