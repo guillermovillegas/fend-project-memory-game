@@ -17,7 +17,7 @@ function generateCards(card) {
 // append cards to the deck node FEND P3 Mike Wales tutorial
 function initGame() {
 	const deck = document.querySelector('.deck');
-	let cardHTML = card.map(function(card) {
+	let cardHTML = shuffle(card).map(function(card) {
 		return generateCards(card);
 	});
 	deck.innerHTML = (cardHTML.join(''));
