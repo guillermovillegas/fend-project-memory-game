@@ -25,12 +25,6 @@ function initGame() {
 
 initGame();
 
-function createBoard(cards) {
-	const cardParent = document.querySelector('.deck');
-	cardParent.appendChild(card);
-};
-
-
 // add event listeners to the cards
 const allCards = document.querySelectorAll('.card');
 const openCards = [];
