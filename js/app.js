@@ -10,19 +10,17 @@ const card = ['fa-diamond', 'fa-diamond',
 						 ];
 
 function generateCards(card) {
-	return `<li class="card" data-card="${card}"><i class="fa ${card}"></i></li>`
-
+	return `<li class="card" id="${card}"><i class="fa ${card}"></i></li>`
 };
 
-// append cards to the deck node FEND P3 Mike Wales tutorial
+// append shuffled cards to the deck node FEND P3 Mike Wales tutorial
 function initGame() {
 	const deck = document.querySelector('.deck');
 	let cardHTML = shuffle(card).map(function(card) {
-		return generateCards(card);
+		return generateCards(`${card}`);
 	});
 	deck.innerHTML = (cardHTML.join(''));
 }
-
 initGame();
 
 // add event listeners to the cards
@@ -30,9 +28,39 @@ const allCards = document.querySelectorAll('.card');
 const openCards = [];
 
 allCards.forEach(function(card) {
-	card.addEventListener('click', function (e) {
+	card.addEventListener('click', function(e) {
 		card.classList.add('open', 'show');
-	})
+		function updateArray() {
+			openCards.push(card.id);
+		}
+
+		function checkMatch() {
+			if (openCards.length == 2 && openCards[0] == openCards[1]) {
+				const showCards = document.querySelectorAll('.show');
+				showCards.forEach(createMatch); 
+				function createMatch(card) {
+					card.classList.remove('open','show');
+					card.classList.add('match');
+				}
+				openCards.splice(0, openCards.length);
+			};
+		};
+
+		function resetCards() {
+			if (openCards.length == 2 && openCards[0] != openCards[1]) {
+				const showCards = document.querySelectorAll('.show');
+				showCards.forEach(removeShow);
+				function removeShow(card) {
+					card.classList.remove('open','show');
+				}
+				openCards.splice(0, openCards.length);
+			}
+		}
+
+		updateArray();
+		checkMatch();
+		resetCards();
+	});
 });
 
 // Shuffle function from http://stackoverflow.com/a/2450976
