@@ -37,6 +37,7 @@ deck.addEventListener('click', event => {
 	if (toggledCards.length === 2 ) {
 		checkForMatch(clickTarget);
 		addMove();
+		checkScore();
 	}
 	}
 });
@@ -81,6 +82,22 @@ function addMove() {
 	moves++;
 	const movesText = document.querySelector('.moves')
 	movesText.innerHTML = moves
+}
+
+function checkScore() {
+	if (moves === 16 || moves === 24) {
+		hideStar();
+	} 
+}
+
+function hideStar() {
+	const starList = document.querySelectorAll('.stars li');
+	for (star of starList) {
+		if (star.style.display != 'none') {
+			star.style.display = 'none';
+			break;
+		}
+	}
 }
 
 // Shuffle function from http://stackoverflow.com/a/2450976
