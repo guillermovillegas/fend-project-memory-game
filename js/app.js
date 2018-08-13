@@ -32,7 +32,7 @@ allCards.forEach(function(card) {
 		card.classList.add('open', 'show');
 		function updateArray() {
 			openCards.push(card.id);
-		}
+		};
 
 		function checkMatch() {
 			if (openCards.length == 2 && openCards[0] == openCards[1]) {
@@ -55,7 +55,7 @@ allCards.forEach(function(card) {
 				}
 				openCards.splice(0, openCards.length);
 			}
-		}
+		};
 
 		updateArray();
 		checkMatch();
