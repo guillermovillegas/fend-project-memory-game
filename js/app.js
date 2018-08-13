@@ -13,10 +13,12 @@ function generateCards(card) {
 	return `<li class="card" id="${card}"><i class="fa ${card}"></i></li>`
 };
 
+const deck = document.querySelector('.deck');
+
+
 // append shuffled cards to the deck node FEND P3 Mike Wales tutorial
 function initGame() {
-	const deck = document.querySelector('.deck');
-	let cardHTML = shuffle(card).map(function(card) {
+	let cardHTML = shuffle(card).map(card => {
 		return generateCards(`${card}`);
 	});
 	deck.innerHTML = (cardHTML.join(''));
@@ -25,43 +27,54 @@ initGame();
 
 // add event listeners to the cards
 const allCards = document.querySelectorAll('.card');
-const openCards = [];
+let toggledCards = [];
 
-allCards.forEach(function(card) {
-	card.addEventListener('click', function(e) {
-		card.classList.add('open', 'show');
-		function updateArray() {
-			openCards.push(card.id);
-		};
-
-		function checkMatch() {
-			if (openCards.length == 2 && openCards[0] == openCards[1]) {
-				const showCards = document.querySelectorAll('.show');
-				showCards.forEach(createMatch); 
-				function createMatch(card) {
-					card.classList.remove('open','show');
-					card.classList.add('match');
-				}
-				openCards.splice(0, openCards.length);
-			};
-		};
-
-		function resetCards() {
-			if (openCards.length == 2 && openCards[0] != openCards[1]) {
-				const showCards = document.querySelectorAll('.show');
-				showCards.forEach(removeShow);
-				function removeShow(card) {
-					card.classList.remove('open','show');
-				}
-				openCards.splice(0, openCards.length);
-			}
-		};
-
-		updateArray();
-		checkMatch();
-		resetCards();
-	});
+deck.addEventListener('click', event => {
+	const clickTarget = event.target;
+	if (isClickValid(clickTarget)) {
+			toggleCard(clickTarget);
+			addToggleCard(clickTarget);
+	if (toggledCards.length === 2 ) {
+		checkForMatch(clickTarget);
+	}
+	}
 });
+
+function toggleCard(card) {
+	card.classList.toggle('open');
+	card.classList.toggle('show');
+}
+
+function addToggleCard(clickTarget) {
+	toggledCards.push(clickTarget);
+	console.log(toggledCards);
+}
+
+function checkForMatch() {
+	if (
+		toggledCards[0].firstElementChild.className == 
+		toggledCards[1].firstElementChild.className
+		) {
+		toggledCards[0].classList.toggle('match');
+		toggledCards[1].classList.toggle('match');
+		toggledCards = [];
+	} else {
+		setTimeout(() => {
+			toggleCard(toggledCards[0]);
+			toggleCard(toggledCards[1]);
+			toggledCards = [];
+		}, 1000);
+	}
+}
+
+function isClickValid(clickTarget) {
+	return (
+		clickTarget.classList.contains('card') && 
+		!clickTarget.classList.contains('match') &&
+		toggledCards.length < 2 &&
+		!toggledCards.includes(clickTarget)
+		);
+}
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
