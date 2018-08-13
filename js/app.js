@@ -14,7 +14,7 @@ function generateCards(card) {
 };
 
 const deck = document.querySelector('.deck');
-
+let moves = 0;
 
 // append shuffled cards to the deck node FEND P3 Mike Wales tutorial
 function initGame() {
@@ -36,6 +36,7 @@ deck.addEventListener('click', event => {
 			addToggleCard(clickTarget);
 	if (toggledCards.length === 2 ) {
 		checkForMatch(clickTarget);
+		addMove();
 	}
 	}
 });
@@ -74,6 +75,12 @@ function isClickValid(clickTarget) {
 		toggledCards.length < 2 &&
 		!toggledCards.includes(clickTarget)
 		);
+}
+
+function addMove() {
+	moves++;
+	const movesText = document.querySelector('.moves')
+	movesText.innerHTML = moves
 }
 
 // Shuffle function from http://stackoverflow.com/a/2450976
