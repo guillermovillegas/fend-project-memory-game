@@ -15,6 +15,9 @@ function generateCards(card) {
 
 const deck = document.querySelector('.deck');
 let moves = 0;
+let clockOff = true;
+let time = 0;
+let clockId;
 
 // append shuffled cards to the deck node FEND P3 Mike Wales tutorial
 function initGame() {
@@ -32,6 +35,10 @@ let toggledCards = [];
 deck.addEventListener('click', event => {
 	const clickTarget = event.target;
 	if (isClickValid(clickTarget)) {
+		if(clockOff) {
+			startClock();
+			clockOff = false;
+		}
 			toggleCard(clickTarget);
 			addToggleCard(clickTarget);
 	if (toggledCards.length === 2 ) {
@@ -97,6 +104,30 @@ function hideStar() {
 			star.style.display = 'none';
 			break;
 		}
+	}
+}
+
+function startClock() {
+	clockId = setInterval(() => {
+		time++;
+		displayTime();
+	}, 1000);
+}
+
+function stopClock () {
+	clearInterval(clockId);
+}
+
+function displayTime() {
+	const minutes = Math.floor(time / 60);
+	const seconds = time % 60;
+	let clock = document.querySelector('.clock');
+	console.log(clock);
+	clock.innerHTML = time;
+	if (seconds < 10) {
+		clock.innerHTML = `${minutes}:0${seconds}`;
+	} else {
+	clock.innerHTML = `${minutes}:${seconds}`;
 	}
 }
 
