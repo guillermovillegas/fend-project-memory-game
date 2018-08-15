@@ -13,11 +13,15 @@ function generateCards(card) {
 	return `<li class="card" id="${card}"><i class="fa ${card}"></i></li>`
 };
 
+
+//Global varibales
 const deck = document.querySelector('.deck');
 let moves = 0;
 let clockOff = true;
 let time = 0;
 let clockId;
+let matched = 0;
+const TOTAL_PAIRS = 8;
 
 // append shuffled cards to the deck node FEND P3 Mike Wales tutorial
 function initGame() {
@@ -27,6 +31,10 @@ function initGame() {
 	deck.innerHTML = (cardHTML.join(''));
 }
 initGame();
+
+/*
+Used Matthew Crawfords FEND resources to assit in completing the logic below
+*/
 
 // add event listeners to the cards
 const allCards = document.querySelectorAll('.card');
@@ -47,26 +55,40 @@ deck.addEventListener('click', event => {
 		checkScore();
 	}
 	}
+	if (matched === TOTAL_PAIRS) {
+	gameOver();
+}
 });
 
+// modal cancel functionality
 document.querySelector('.modal_cancel').addEventListener('click', () => {
 	toggleModal();
 });
 
+//modal replay functionality
 document.querySelector('.modal_replay').addEventListener('click', () => {
 	console.log('replay');
 });
+
+//restart button functionality
+document.querySelector('.restart').addEventListener('click', resetGame);
+
+//modal replay button functionality
+document.querySelector('.modal_replay').addEventListener('click', replayGame);
+
 
 function toggleCard(card) {
 	card.classList.toggle('open');
 	card.classList.toggle('show');
 }
 
+//adds card to an array to be evaluated for match
 function addToggleCard(clickTarget) {
 	toggledCards.push(clickTarget);
 	console.log(toggledCards);
 }
 
+// check math between two cards logic
 function checkForMatch() {
 	if (
 		toggledCards[0].firstElementChild.className == 
@@ -75,15 +97,17 @@ function checkForMatch() {
 		toggledCards[0].classList.toggle('match');
 		toggledCards[1].classList.toggle('match');
 		toggledCards = [];
+		matched++;
 	} else {
 		setTimeout(() => {
 			toggleCard(toggledCards[0]);
 			toggleCard(toggledCards[1]);
 			toggledCards = [];
-		}, 1000);
+		}, 700);
 	}
 }
 
+// ensures that the same card cannot be clicked 2x 
 function isClickValid(clickTarget) {
 	return (
 		clickTarget.classList.contains('card') && 
@@ -93,18 +117,21 @@ function isClickValid(clickTarget) {
 		);
 }
 
+// move counter
 function addMove() {
 	moves++;
 	const movesText = document.querySelector('.moves')
 	movesText.innerHTML = moves
 }
 
+// determines # of stars
 function checkScore() {
 	if (moves === 16 || moves === 24) {
 		hideStar();
 	} 
 }
 
+// removes stars based on score
 function hideStar() {
 	const starList = document.querySelectorAll('.stars li');
 	for (star of starList) {
@@ -126,6 +153,7 @@ function stopClock () {
 	clearInterval(clockId);
 }
 
+//shows time in MM::SS
 function displayTime() {
 	const minutes = Math.floor(time / 60);
 	const seconds = time % 60;
@@ -139,18 +167,17 @@ function displayTime() {
 	}
 }
 
+// covers screen with modal when victory is achieved
 function toggleModal() {
 	const modal = document.querySelector('.modal_background');
 	modal.classList.toggle('hide');
 }
-toggleModal();
-toggleModal();
 
 function writeModalStats() {
 	const timeStat = document.querySelector('.modal_time')
 	const clockTime = document.querySelector('.clock').innerHTML;
-	const moveStat = document.querySelector('modal_moves');
-	const starsStat = document.querySelector('modal_stars');
+	const moveStat = document.querySelector('.modal_moves');
+	const starsStat = document.querySelector('.modal_stars');
 	const stars = getStars();
 
 	timeStat.innerHTML = `Time = ${clockTime}`;
@@ -158,8 +185,9 @@ function writeModalStats() {
 	starsStat.innerHTML = `Stars = ${stars}`;
 }
 
+// counts # of stars to write into modal
 function getStars() {
-	stars = document.querySelector('.stars li');
+	stars = document.querySelectorAll('.stars li');
 	starCount = 0;
 	for (star of stars) {
 		if (star.style.display !== 'none') {
@@ -170,6 +198,45 @@ function getStars() {
 	return starCount;
 }
 
+function resetGame() {
+	resetClockAndTime();
+	resetMoves();
+	resetStars();
+	initGame();
+}
+
+function resetClockAndTime() {
+	stopClock();
+	clockOff = true;
+	time = 0;
+	displayTime();
+}
+
+function resetMoves() {
+	moves = 0;
+	document.querySelector('.moves').innerHTML = moves;
+}
+
+function resetStars() {
+	stars = 0;
+	const starList = document.querySelectorAll('.stars li')
+	for (star of starList) {
+		star.style.display = 'inline';
+	}
+}
+
+function gameOver() {
+	stopClock();
+	writeModalStats();
+	toggleModal();
+	matched = 0;
+}
+
+function replayGame() {
+	resetGame();
+	toggleModal();
+	matched = 0;
+}
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
