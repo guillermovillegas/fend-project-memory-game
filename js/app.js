@@ -49,6 +49,14 @@ deck.addEventListener('click', event => {
 	}
 });
 
+document.querySelector('.modal_cancel').addEventListener('click', () => {
+	toggleModal();
+});
+
+document.querySelector('.modal_replay').addEventListener('click', () => {
+	console.log('replay');
+});
+
 function toggleCard(card) {
 	card.classList.toggle('open');
 	card.classList.toggle('show');
@@ -130,6 +138,38 @@ function displayTime() {
 	clock.innerHTML = `${minutes}:${seconds}`;
 	}
 }
+
+function toggleModal() {
+	const modal = document.querySelector('.modal_background');
+	modal.classList.toggle('hide');
+}
+toggleModal();
+toggleModal();
+
+function writeModalStats() {
+	const timeStat = document.querySelector('.modal_time')
+	const clockTime = document.querySelector('.clock').innerHTML;
+	const moveStat = document.querySelector('modal_moves');
+	const starsStat = document.querySelector('modal_stars');
+	const stars = getStars();
+
+	timeStat.innerHTML = `Time = ${clockTime}`;
+	moveStat.innerHTML = `Moves = ${moves}`;
+	starsStat.innerHTML = `Stars = ${stars}`;
+}
+
+function getStars() {
+	stars = document.querySelector('.stars li');
+	starCount = 0;
+	for (star of stars) {
+		if (star.style.display !== 'none') {
+			starCount++;
+		}
+	}
+	console.log(starCount);
+	return starCount;
+}
+
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
